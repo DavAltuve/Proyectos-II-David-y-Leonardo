@@ -6,4 +6,4 @@ Este proyecto consistió en la elaboración de un modelo basico de un escaner 3D
 Los detalles del proyecto y la explicación se encuentran en la wiki del proyecto
 El proyecto fue realizado por:
 
-  David Altuve.  Leonardo Cabrera.
+  David Altuve y Leonardo Cabrera.
