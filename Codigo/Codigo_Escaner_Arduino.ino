@@ -1,49 +1,30 @@
 #include <Servo.h>
-
+//Definicion de variables:
+//Servomotor
 Servo servo;
 int posServo=180;
 
-
+//Interupciones
 const byte pinInt1=2;
 const byte pinInt2=3;
 
-//definicion de pins
-const int motorPin1 = 8;    // 28BYJ48 In1
-const int motorPin2 = 9;    // 28BYJ48 In2
-const int motorPin3 = 10;   // 28BYJ48 In3
-const int motorPin4 = 11;   // 28BYJ48 In4
-                   
-//definicion variables
-int stepCounter = 0;     // contador para los pasos
-int pasos=0;
- 
-//tablas con la secuencia de encendido (descomentar la que necesiteis)
-//secuencia 1-fase
-const int numSteps = 4;
-const int stepsLookup[4] = { B1000, B0100, B0010, B0001 };
-
-
-/*LOW to trigger the interrupt whenever the pin is low,
-
-CHANGE to trigger the interrupt whenever the pin changes value
-
-RISING to trigger when the pin goes from low to high,
-
-FALLING for when the pin goes from high to low.
-The Due, Zero and MKR1000 boards allows also:
-
-HIGH to trigger the interrupt whenever the pin is high.*/
-
-
+//definicion de pins motor de pasos
+const int motorPin1 = 8;    //  In1
+const int motorPin2 = 9;    //  In2
+const int motorPin3 = 10;   //  In3
+const int motorPin4 = 11;   //  In4
+                  
+int contador = 0;     // contador para los pasos dentro del ciclo definido
+int pasos=0;          //contador pasos totales
+const int nPasos = 4; //numero de configuraciones de pasos totales
+const int defPasos[4] = { B1000, B0100, B0010, B0001 }; //configuraciones de pasos
 
 void setup() {
-  //declarar pines como salida
+  //Declaraciones y configuraciones iniciales
   pinMode(motorPin1, OUTPUT);
   pinMode(motorPin2, OUTPUT);
   pinMode(motorPin3, OUTPUT);
   pinMode(motorPin4, OUTPUT);
-  pinMode(13,OUTPUT);
-  Serial.begin(9600);
   attachInterrupt(digitalPinToInterrupt(pinInt1),paso,RISING);
   attachInterrupt(digitalPinToInterrupt(pinInt2),pasoServo,RISING);
   servo.attach(5);
@@ -56,31 +37,34 @@ void loop() {
 } 
 
 void paso(){
+  //Interrupcion que se ejecuta para realizar un paso del motor
   noInterrupts();
-  clockwise();
+  pasoHorario();
   interrupts();
 }
 
 void pasoServo(){
+  //Interrupcion que se ejecuta para mover el servomotor
   noInterrupts();
   posServo-=5;
   interrupts();
 }
 
-void clockwise()
+void pasoHorario()
 {
-  stepCounter++;
-  if (stepCounter >= numSteps) stepCounter = 0;
-  setOutput(stepCounter);
+  //Funcion que ejecuta un paso horario.
+  contador++;
+  if (contador >= nPasos) contador = 0;
+  salidaPaso(contador);
   delay(20);
   pasos++;
 }
  
  
-void setOutput(int step)
+void salidaPaso(int paso)
 {
-  digitalWrite(motorPin1, bitRead(stepsLookup[step], 0));
-  digitalWrite(motorPin2, bitRead(stepsLookup[step], 1));
-  digitalWrite(motorPin3, bitRead(stepsLookup[step], 2));
-  digitalWrite(motorPin4, bitRead(stepsLookup[step], 3));
+  digitalWrite(motorPin1, bitRead(defPasos[paso], 0));
+  digitalWrite(motorPin2, bitRead(defPasos[paso], 1));
+  digitalWrite(motorPin3, bitRead(defPasos[paso], 2));
+  digitalWrite(motorPin4, bitRead(defPasos[paso], 3));
 }
