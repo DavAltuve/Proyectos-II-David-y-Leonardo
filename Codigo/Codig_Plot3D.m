@@ -4,9 +4,7 @@ A=cell2mat(A);
 figure(1)
 plot3(A(:,1),A(:,2),A(:,3),':.b');
 grid();
-% xlim([-20 20]);
-%  ylim([-20 20]);
- zlim([0 10]);
-%figure(2)
+zlim([0 10]);
+figure(2)
 plot(A(:,1),A(:,2),':.b');
 fclose(ID);
